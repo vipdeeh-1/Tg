@@ -64,7 +64,7 @@ func runShellCommand(cmd string, timeout time.Duration) (string, string, int) {
 func shellRunner(c *td.Client, m *td.Message) error {
 	args := strings.TrimSpace(Args(m))
 	if args == "" {
-		_, _ = m.ReplyText(c, "Usage: /sh cmd", nil)
+		_, _ = m.ReplyText(c, "Usage: /sh cmd", nil) // /sh 
 		return td.EndGroups
 	}
 
