@@ -5,7 +5,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc \
-    zlib1g-dev && \
+    zlib1g-dev \
+    wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -16,6 +17,9 @@ COPY . .
 
 RUN go run github.com/AshokShau/gotdbot/scripts/tools
 RUN go run setup_ntgcalls.go
+
+# glibc_compatibility.h မရှိလို့ တက်သည့် Error ကို ဖြေရှင်းရန် ဖိုင်အလွတ် ဖန်တီးပေးခြင်း
+RUN touch glibc_compatibility.h
 
 RUN CGO_ENABLED=1 GOOS=linux go build -ldflags="-w -s" -o main .
 
