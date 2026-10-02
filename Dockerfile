@@ -5,19 +5,24 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc \
-    zlib1g-dev && \
+    zlib1g-dev \
+    git \
+    wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 COPY go.mod go.sum ./
 RUN go mod download
 
+# ပရောဂျက်ဖိုင်အားလုံး (glibc_compatibility.h အပါအဝင်) ကို အရင် ကူးယူပါ
 COPY . .
 
+# External scripts များမဒေါင်းမီ သို့မဟုတ် dependencies မပြင်မီ Header ဖိုင်ရှိနေကြောင်း သေချာစေခြင်း
 RUN go run github.com/AshokShau/gotdbot/scripts/tools
 RUN go run setup_ntgcalls.go
 
-RUN CGO_ENABLED=1 GOOS=linux go build -ldflags="-w -s" -o main .
+# CGO_CFLAGS="-I." ထည့်သွင်းပေးခြင်းဖြင့် လက်ရှိ Directory ထဲမှ .h ဖိုင်များကို C Compiler မှ ရှာတွေ့စေပါမည်
+RUN CGO_ENABLED=1 CGO_CFLAGS="-I." GOOS=linux go build -ldflags="-w -s" -o main .
 
 FROM debian:12-slim AS runtime
 
@@ -47,7 +52,7 @@ ENV PATH="${DENO_INSTALL}/bin:${PATH}"
 ENV HOME="/home/app"
 
 COPY --from=builder --chown=app:app /app/main /usr/local/bin/app
-COPY --from=builder --chown=app:app /app/libtdjson.so.* /home/app/
+COPY --from=builder --chown=app:app /app/libtdjson.so* /home/app/
 
 RUN chown -R app:app /opt/deno
 
