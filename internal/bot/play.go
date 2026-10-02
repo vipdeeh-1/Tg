@@ -433,7 +433,7 @@ func enqueueTrack(c *td.Client, updater *td.Message, chatId int64, saveCache *ut
 		escName := html.EscapeString(saveCache.Name)
 		escUser := html.EscapeString(saveCache.User)
 		queueInfo := fmt.Sprintf(
-			"<u><b>Added to queue: %d</b></u>\n\n<b>Title:</b> <a href='%s'>%s</a>\n\n<b>Duration:</b> %s min\n<b>Requested by:</b> %s",
+			"<u><b>Aᴅᴅᴇᴅ Tᴏ Qᴜᴇᴜᴇ Aᴛ %d</b></u>\n\n<b>❍ ᴛɪᴛʟє ➥</b> <a href='%s'>%s</a>\n\n<b>❍ ᴛɪϻє ➥</b> %s ϻɪη\n<b>❍ ʙʏ ➥</b> %s",
 			qLen, escURL, escName, utils.SecToMin(saveCache.Duration), escUser,
 		)
 
@@ -454,7 +454,7 @@ func sendStartedStreaming(c *td.Client, updater *td.Message, saveCache *utils.Pl
 	escUser := html.EscapeString(saveCache.User)
 
 	nowPlaying := fmt.Sprintf(
-		"<u><b>| Started streaming</b></u>\n\n<b>Title:</b> <a href='%s'>%s</a>\n\n<b>Duration:</b> %s min\n<b>Requested by:</b> %s",
+		"<u><b>❖ ϻυsɪᴄ ση sᴛʀєᴧϻɪηɢ●</b></u>\n\n<b>❍ ᴛɪᴛʟє ➥</b> <a href='%s'>%s</a>\n\n<b>❍ ᴛɪϻє ➥</b> %s ϻɪη\n<b>❍ ʙʏ ➥</b> %s",
 		escURL, escName, utils.SecToMin(saveCache.Duration), escUser,
 	)
 
