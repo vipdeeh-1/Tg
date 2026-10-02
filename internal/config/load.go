@@ -20,12 +20,12 @@ import (
 )
 
 const (
-	defaultDBName         = "Anon"
+	defaultDBName         = "Coresmusics"
 	defaultAPIURL         = "https://api.onegrab.fun"
 	defaultService        = "youtube"
 	defaultDownloadsDir   = "downloads"
-	defaultSupportGroup   = "https://t.me/FallenSupport"
-	defaultSupportChannel = "https://t.me/FallenProjects"
+	defaultSupportGroup   = "https://t.me/myanmar_music_bot2027"
+	defaultSupportChannel = "https://t.me/myanmarbot_music"
 	defaultStartImage     = "https://files.catbox.moe/onc6xg.jpg"
 	defaultMaxFileSize    = int64(500 * 1024 * 1024)
 	defaultSongDuration   = int32(3600)
