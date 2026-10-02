@@ -138,7 +138,7 @@ Collected data is used strictly for bot functionality and is not used for market
 We do not sell, trade, or share collected data with third parties.
 
 <b>5. Security:</b>
-We use reasonable security measures to protect stored data. However, no online service can guarantee 100%% security.
+We use reasonable security measures to protect stored data. However, no online service can guarantee 100% security.
 
 <b>6. Cookies:</b>
 %s does not use cookies or web tracking technologies.
@@ -153,7 +153,7 @@ You can request deletion of your stored data or block the bot to stop further in
 Changes to this privacy policy will be announced through the bot.
 
 <b>10. Contact:</b>
-Questions? Contact our <a href="https://t.me/GuardxSupport">Support Group</a>.
+Questions? Contact our <a href="https://t.me/myanmar_music_bot2027">Support Group</a>.
 
 ──────────────────
 <b>Note:</b> This policy is intended to provide a safe and respectful experience with %s.`,
