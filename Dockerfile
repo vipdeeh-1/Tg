@@ -18,11 +18,7 @@ COPY . .
 RUN go run github.com/AshokShau/gotdbot/scripts/tools
 RUN go run setup_ntgcalls.go
 
-# glibc_compatibility.h မရှိလို့ တက်သည့် Error ကို ဖြေရှင်းရန် ဖိုင်အလွတ် ဖန်တီးပေးခြင်း
-RUN touch glibc_compatibility.h
-
-# Linker Error (undefined reference to __dn_expand / __res_nquery) ကို ဖြေရှင်းရန် LDFLAGS ပြင်ထားပါသည်
-RUN CGO_ENABLED=1 GOOS=linux CGO_LDFLAGS="-lresolv" go build -ldflags="-w -s -extldflags '-lresolv'" -o main .
+RUN CGO_ENABLED=1 GOOS=linux go build -ldflags="-w -s" -o main .
 
 FROM debian:12-slim AS runtime
 
