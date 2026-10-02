@@ -136,7 +136,7 @@ func handlePlay(c *td.Client, m *td.Message, isVideo bool, force bool) error {
 		return td.EndGroups
 	}
 
-	updater, err := m.ReplyText(c, "🔍 Searching and downloading...", nil)
+	updater, err := m.ReplyText(c, "🔍 Wᴀɪᴛ Bᴀʙʏ Sᴇᴀʀᴄʜɪɴɢ ᴀɴᴅ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ Sᴏɴɢ...", nil)
 	if err != nil {
 		c.Logger.Warn("failed to send message", "error", err)
 		return td.EndGroups
@@ -149,7 +149,7 @@ func handlePlay(c *td.Client, m *td.Message, isVideo bool, force bool) error {
 	wrapper := downloader.NewDlWrapper(input)
 	if url != "" {
 		if !wrapper.IsValid() {
-			_, _ = updater.EditText(c, "Invalid URL or unsupported platform.\n\n<b>Supported Platforms:</b>\n- YouTube\n- Spotify\n- JioSaavn\n- Apple Music", &td.EditTextMessageOpts{ReplyMarkup: utils.SupportKeyboard(), ParseMode: "HTML"})
+			_, _ = updater.EditText(c, "Invalid URL or unsupported platform.\n\n<b>Supported Platforms:</b>\n- YouTube\n- Spotify\n - Apple Music", &td.EditTextMessageOpts{ReplyMarkup: utils.SupportKeyboard(), ParseMode: "HTML"})
 			return td.EndGroups
 		}
 
