@@ -227,7 +227,7 @@ func (c *TelegramCalls) PlayNext(bot *td.Client, chatID int64) error {
 
 func (c *TelegramCalls) handleNoSong(bot *td.Client, chatID int64) error {
 	_ = c.Stop(chatID, false)
-	_, _ = bot.SendTextMessage(chatID, "🎵 Queue finished. Add more songs with /play.", nil)
+	_, _ = bot.SendTextMessage(chatID, "🎵 သီချင်းပဲ နားထောင်ပါ.သူကမှာ အဖက်မလုပ်တာ 💔 /play.", nil)
 	return nil
 }
 
@@ -252,7 +252,7 @@ func (c *TelegramCalls) playTrack(bot *td.Client, chatID int64, song *utils.Play
 	}
 
 	text := fmt.Sprintf(
-		"<u><b>| Started streaming</b></u>\n\n<b>Title:</b> <a href='%s'>%s</a>\n\n<b>Duration:</b> %s min\n<b>Requested by:</b> %s",
+		"<u><b>❖ ϻυsɪᴄ ση sᴛʀєᴧϻɪη●</b></u>\n\n<b>❍ ᴛɪᴛʟє ➥</b> <a href='%s'>%s</a>\n\n<b>❍ ᴛɪϻє ➥</b> %s ϻɪη\n<b>❍ ʙʏ ➥</b> %s",
 		html.EscapeString(song.URL),
 		html.EscapeString(song.Name),
 		utils.SecToMin(song.Duration),
