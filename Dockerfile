@@ -14,15 +14,16 @@ RUN apt-get update && \
 COPY go.mod go.sum ./
 RUN go mod download
 
-# ပရောဂျက်ဖိုင်အားလုံး (glibc_compatibility.h အပါအဝင်) ကို အရင် ကူးယူပါ
 COPY . .
 
-# External scripts များမဒေါင်းမီ သို့မဟုတ် dependencies မပြင်မီ Header ဖိုင်ရှိနေကြောင်း သေချာစေခြင်း
+# glibc_compatibility.h နှင့် .c ကို Build Container ထဲ၌ တိုက်ရိုက် ဖန်တီးပေးခြင်း
+RUN echo '#pragma once\n#ifdef __cplusplus\nextern "C" {\n#endif\n#ifdef __GLIBC__\n#if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 28)\n#include <resolv.h>\n__attribute__((weak)) int __dn_expand(const unsigned char *msg, const unsigned char *eomorig, const unsigned char *comp_dn, char *exp_dn, int length) { return dn_expand(msg, eomorig, comp_dn, exp_dn, length); }\n__attribute__((weak)) int __res_nquery(res_state statp, const char *dname, int class, int type, unsigned char *answer, int anslen) { return res_nquery(statp, dname, class, type, answer, anslen); }\n#endif\n#endif\n#ifdef __cplusplus\n}\n#endif' > glibc_compatibility.h && \
+    echo '#include "glibc_compatibility.h"' > glibc_compatibility.c
+
 RUN go run github.com/AshokShau/gotdbot/scripts/tools
 RUN go run setup_ntgcalls.go
 
-# CGO_CFLAGS="-I." ထည့်သွင်းပေးခြင်းဖြင့် လက်ရှိ Directory ထဲမှ .h ဖိုင်များကို C Compiler မှ ရှာတွေ့စေပါမည်
-RUN CGO_ENABLED=1 CGO_CFLAGS="-I." GOOS=linux go build -ldflags="-w -s" -o main .
+RUN CGO_ENABLED=1 CGO_CFLAGS="-I/app -I." GOOS=linux go build -ldflags="-w -s" -o main .
 
 FROM debian:12-slim AS runtime
 
