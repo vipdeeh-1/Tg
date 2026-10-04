@@ -21,7 +21,7 @@ import (
 
 const (
 	defaultDBName         = "Coresmusics"
-	defaultAPIURL         = "https://api.onegrab.fun"
+	defaultAPIURL         = "https://music.yukiapi.site"
 	defaultService        = "youtube"
 	defaultDownloadsDir   = "downloads"
 	defaultSupportGroup   = "https://t.me/myanmar_music_bot2027"
