@@ -11,16 +11,17 @@ package downloader
 import (
 	"ashokshau/tgmusic/internal/config"
 	"ashokshau/tgmusic/internal/utils"
-	"log/slog"
-
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 )
 
 type apiData struct {
@@ -49,6 +50,27 @@ var apiPatterns = map[string]*regexp.Regexp{
 	),
 	utils.Kick:     regexp.MustCompile(`(?i)https?:\/\/(?:www\.)?kick\.com\/[\w._-]+\/videos\/[a-fA-F0-9-]+`),
 	utils.KickClip: regexp.MustCompile(`(?i)https?:\/\/(?:www\.)?kick\.com\/[\w._-]+\/clips\/[\w-]+`),
+}
+
+// အမြန်ဆုံးတုံ့ပြန်ရန် ၅ စက္ကန့် Timeout သတ်မှတ်ထားသော HTTP Client
+var httpClient = &http.Client{
+	Timeout: 5 * time.Second,
+}
+
+func sendRequest(method, rawURL string, body io.Reader, headers map[string]string) (*http.Response, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, method, rawURL, body)
+	if err != nil {
+		return nil, err
+	}
+
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+
+	return httpClient.Do(req)
 }
 
 func newApiData(query string) *apiData {
@@ -104,13 +126,15 @@ func (a *apiData) search() (*utils.PlatformTracks, error) {
 		return a.getInfo()
 	}
 
+	// ပိုမိုမြန်ဆန်စေရန် limit ကို ၃ သို့ ပြောင်းထားပါသည်
 	fullURL := fmt.Sprintf("%s/api/search?%s", a.ApiUrl, url.Values{
 		"query": {a.Query},
-		"limit": {"5"},
+		"limit": {"3"},
 	}.Encode())
 
 	resp, err := sendRequest(http.MethodGet, fullURL, nil, map[string]string{"X-API-Key": a.APIKey})
 	if err != nil {
+		slog.Warn("The search request failed or timed out", "error", err)
 		return nil, fmt.Errorf("the search request failed: %w", err)
 	}
 	defer func(Body io.ReadCloser) {
@@ -156,7 +180,6 @@ func (a *apiData) getTrack() (*utils.TrackInfo, error) {
 }
 
 func (a *apiData) downloadTrack(info *utils.TrackInfo, video bool) (string, error) {
-	// if the track is from YouTube and video:true
 	yt := newYouTubeData(a.Query)
 	if info.Platform == utils.YouTube && video {
 		return yt.downloadTrack(info, video)
