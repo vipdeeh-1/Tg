@@ -11,7 +11,6 @@ package downloader
 import (
 	"ashokshau/tgmusic/internal/config"
 	"ashokshau/tgmusic/internal/utils"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,7 +20,6 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-	"time"
 )
 
 type apiData struct {
@@ -50,27 +48,6 @@ var apiPatterns = map[string]*regexp.Regexp{
 	),
 	utils.Kick:     regexp.MustCompile(`(?i)https?:\/\/(?:www\.)?kick\.com\/[\w._-]+\/videos\/[a-fA-F0-9-]+`),
 	utils.KickClip: regexp.MustCompile(`(?i)https?:\/\/(?:www\.)?kick\.com\/[\w._-]+\/clips\/[\w-]+`),
-}
-
-// အမြန်ဆုံးတုံ့ပြန်ရန် ၅ စက္ကန့် Timeout သတ်မှတ်ထားသော HTTP Client
-var httpClient = &http.Client{
-	Timeout: 5 * time.Second,
-}
-
-func sendRequest(method, rawURL string, body io.Reader, headers map[string]string) (*http.Response, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	req, err := http.NewRequestWithContext(ctx, method, rawURL, body)
-	if err != nil {
-		return nil, err
-	}
-
-	for k, v := range headers {
-		req.Header.Set(k, v)
-	}
-
-	return httpClient.Do(req)
 }
 
 func newApiData(query string) *apiData {
